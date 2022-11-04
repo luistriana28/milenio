@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="admon_summary_report_wizard" model="ir.ui.view" >
+        <field name="name">admon Summary Report</field>
+        <field name="model">admon.summary.report.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Admon Report">
+                <group>
+                    <group>
+                        <field name="date_start"/>
+                    </group>
+                    <group>
+                        <field name="date_end"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print Report" type="object" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="action_admon_summary_report_wizard"
+        name="Admon Summary Report"
+        res_model="admon.summary.report.wizard"
+        view_mode="form"
+        target="new"/>
+
+    <menuitem action="action_admon_summary_report_wizard"
+        id="menu_admon_summary_report_wizard"
+        parent="account.menu_finance_reports"/>
+</odoo>

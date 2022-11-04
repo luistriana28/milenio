@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report id="admon_summary_report"
+        model="admon.summary.report.wizard"
+        string="Reporte de Resumen"
+        report_type="qweb-pdf"
+        name="milenio_admin_report.admon_summary_report_view"
+        paperformat="milenio_admin_report.paperformat_admon_summary_report"
+        menu="False"/>
+
+   <template id="admon_summary_report_view">
+        <t t-call="web.html_container">
+            <div class="header" style="border-bottom: 1px solid black;">
+                <h3 class="text-center">Resumen 
+                    <span style="font-size: 14px;"><strong>De</strong>: <t t-esc="date_start"/> <strong>Al</strong>: <t t-esc="date_end"/>
+                    </span>
+                </h3>
+            </div>
+            <div class="article mt0 o_report_layout_standard">
+                <table class="table table-condensed table-bordered" t-foreach="docs" t-as="doc">
+                  <thead>
+                    <tr>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Porcentaje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Ventas</th>
+                      <td><span t-esc="'%.2f' % doc['total_invoiced']"/></td>
+                      <td>
+                        <t t-set="total_100" t-value="100"/>
+                        <span t-esc="total_100"/>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Impuestos</th>
+                      <td><span t-esc="'%.2f' % doc['taxes']"/></td>
+                      <td>
+                        <t t-set="impuestos" t-value="(doc['taxes'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % impuestos"></span>%
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Otros Gastos</th>
+                      <td><span t-esc="'%.2f' % doc['other_expense']"/></td>
+                      <td>
+                        <t t-set="otrosgastos" t-value="(doc['total_purchased'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % otrosgastos"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Nomina</th>
+                      <td><span t-esc="'%.2f' % doc['payroll']"/></td>
+                      <td>
+                        <t t-set="nomina" t-value="(doc['payroll'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % nomina"></span>%
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Refacciones</th>
+                      <td><span t-esc="'%.2f' % doc['total_purchase']"/></td>
+                      <td>
+                        <t t-set="refs" t-value="(doc['total_purchase'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % refs"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Servicios</th>
+                      <td><span t-esc="'%.2f' % doc['services']"/></td>
+                      <td>
+                        <t t-set="services" t-value="(doc['services'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % services"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Comision Venta</th>
+                      <td><span t-esc="'%.2f' % doc['sale_comission']"/></td>
+                      <td>
+                        <t t-set="pub" t-value="(doc['sale_comission'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % pub"></span>%
+                      </td>
+                    </tr>
+                     <tr groups="account.group_account_manager">
+                      <th scope="row">Comision Banco</th>
+                      <td><span t-esc="'%.2f' % doc['bank_comission']"/></td>
+                      <td>
+                        <t t-set="comission" t-value="(doc['bank_comission'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % comission"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Prestamos</th>
+                      <td><span t-esc="'%.2f' % doc['loans']"/></td>
+                      <td>
+                        <t t-set="loan" t-value="(doc['loans'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % loan"></span>%
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row"># Tickets</th>
+                      <td>
+                        <span t-esc="doc['total_orders']"/>
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Utilidad neta</th>
+                      <td>
+                        <span t-esc="'%.2f' % doc['utility']"/>
+                      </td>
+                      <td>
+                        <t t-set="util" t-value="(doc['utility'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % util"></span>%
+                      </td>
+                    </tr>
+                     <tr groups="account.group_account_manager">
+                      <th scope="row">% Utilidad</th>
+                      <td>
+                        <span t-esc="'%.2f' % doc['p_utility']"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Ticket Promedio</th>
+                      <td>
+                        <span t-esc="'%.2f' % doc['prom']"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">% Ganancia Ref.</th>
+                      <td>
+                        <span t-esc="'%.2f' % doc['p_ref']"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
