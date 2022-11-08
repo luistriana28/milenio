@@ -67,42 +67,40 @@ class ReportAdmonSummaryReportView(models.AbstractModel):
         loans = 0
         payroll = 0
         total_purchased = 0
+        other_expense = 0
 
-        while start_date <= end_date:
-            date = start_date
+        invoice_ids = self.env['account.invoice'].search([
+            ('date_invoice', '>=', start_date),
+            ('date_invoice', '<=', end_date),
+            ('state', 'in', ['open', 'paid']), ('type', '=', 'out_invoice')])
+        invoices = sum(inv.amount_total for inv in invoice_ids)
+        total_invoiced += invoices
 
-            invoice_ids = self.env['account.invoice'].search([
-                ('date_invoice', '>=', date),
-                ('date_invoice', '<=', end_date),
-                ('state', 'in', ['open', 'paid']), ('type', '=', 'out_invoice')])
-            invoices = sum(inv.amount_total for inv in invoice_ids)
-            total_invoiced += invoices
+        purchase_ids = self.env['account.invoice'].search([
+            ('date_invoice', '>=', start_date),
+            ('date_invoice', '<=', end_date),
+            ('state', 'in', ['open', 'paid']),
+            ('type', '=', 'in_invoice')])
+        purchases = sum(purc.amount_total for purc in purchase_ids)
+        total_purchased += purchases
 
-            purchase_ids = self.env['account.invoice'].search([
-                ('date_invoice', '>=', date),
-                ('date_invoice', '<=', end_date),
-                ('state', 'in', ['open', 'paid']),
-                ('type', '=', 'in_invoice'),
-                ])
-            purchases = sum(purc.amount_total for purc in purchase_ids)
-            total_purchased += purchases
-
-            for purc in purchase_ids:
-                if purc.partner_id.category_id:
-                    if purc.partner_id.category_id.name == 'IMPUESTOS':
+        for purc in purchase_ids:
+            if purc.partner_id.category_id:
+                for categ in purc.partner_id.category_id:
+                    if categ.name == 'IMPUESTOS':
                         taxes += purc.amount_total
-                    elif purc.partner_id.category_id.name == 'COMISION BANCO':
+                    if categ.name == 'COMISION BANCO':
                         bank_comission += purc.amount_total
-                    elif purc.partner_id.category_id.name == 'NOMINA':
+                    if categ.name == 'NOMINA':
                         payroll += purc.amount_total
-                    elif purc.partner_id.category_id.name == 'SERVICIOS':
+                    if categ.name == 'SERVICIOS':
                         services += purc.amount_total
-                    elif purc.partner_id.category_id.name == 'COMISION VENTA':
+                    if categ.name == 'COMISION VENTA':
                         sale_comission += purc.amount_total
-                    elif purc.partner_id.category_id.name == 'PRESTAMOS':
+                    if categ.name == 'PRESTAMOS':
                         loans += purc.amount_total
-                else:
-                    other_expense += purc.amount_total
+            else:
+                other_expense += purc.amount_total
 
         docs.append({
             'total_invoiced': total_invoiced,
