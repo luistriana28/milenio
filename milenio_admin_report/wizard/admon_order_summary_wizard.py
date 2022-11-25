@@ -64,10 +64,11 @@ class ReportAdmonSummaryReportView(models.AbstractModel):
         services = 0
         bank_comission = 0
         sale_comission = 0
-        loans = 0
+        maintenance = 0
         payroll = 0
         total_purchased = 0
         other_expense = 0
+        credit_card = 0
 
         invoice_ids = self.env['account.invoice'].search([
             ('date_invoice', '>=', start_date),
@@ -91,30 +92,31 @@ class ReportAdmonSummaryReportView(models.AbstractModel):
                         taxes += purc.amount_total
                     if categ.name == 'COMISION BANCO':
                         bank_comission += purc.amount_total
+                    if categ.name == 'COMISION RENTA':
+                        sale_comission += purc.amount_total
                     if categ.name == 'NOMINA':
                         payroll += purc.amount_total
                     if categ.name == 'SERVICIOS':
                         services += purc.amount_total
-                    if categ.name == 'COMISION VENTA':
-                        sale_comission += purc.amount_total
-                    if categ.name == 'PRESTAMOS':
-                        loans += purc.amount_total
+                    if categ.name == 'MANTENIMIENTO':
+                        maintenance += purc.amount_total
+                    if categ.name == 'TARJETAS CREDITO':
+                        credit_card += purc.credit_card
             else:
                 other_expense += purc.amount_total
 
         docs.append({
             'total_invoiced': total_invoiced,
             'taxes': taxes,
-            'payroll': payroll,
-            'total_purchased': total_purchased,
-            'services': services,
-            'sale_comission': sale_comission,
             'bank_comission': bank_comission,
-            'loans': loans,
+            'sale_comission': sale_comission,
+            'payroll': payroll,
+            'services': services,
+            'maintenance': maintenance,
+            'credit_card': credit_card,
+            'total_purchased': total_purchased,
             'utility': (total_invoiced - total_purchased),
             'other_expense': other_expense,
-            'p_utility': (((total_invoiced - total_purchased) * 100) / total_invoiced),
-            'p_ref': (((total_invoiced / total_purchased) * 100) - 100),
             'company': self.env.user.company_id
         })
 

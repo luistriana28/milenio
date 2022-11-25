@@ -45,7 +45,7 @@
                       <th scope="row">Otros Gastos</th>
                       <td><span t-esc="'%.2f' % doc['other_expense']"/></td>
                       <td>
-                        <t t-set="otrosgastos" t-value="(doc['total_purchased'] * total_100 / doc['total_invoiced'])"/>
+                        <t t-set="otrosgastos" t-value="(doc['other_expense'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % otrosgastos"></span>%
                       </td>
                     </tr>
@@ -57,14 +57,6 @@
                         <span t-esc="'%.2f' % nomina"></span>%
                       </td>
                     </tr>
-                    <tr>
-                      <th scope="row">Refacciones</th>
-                      <td><span t-esc="'%.2f' % doc['total_purchased']"/></td>
-                      <td>
-                        <t t-set="refs" t-value="(doc['total_purchased'] * total_100 / doc['total_invoiced'])"/>
-                        <span t-esc="'%.2f' % refs"></span>%
-                      </td>
-                    </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Servicios</th>
                       <td><span t-esc="'%.2f' % doc['services']"/></td>
@@ -74,7 +66,15 @@
                       </td>
                     </tr>
                     <tr groups="account.group_account_manager">
-                      <th scope="row">Comision Venta</th>
+                      <th scope="row">Mantenimiento</th>
+                      <td><span t-esc="'%.2f' % doc['maintenance']"/></td>
+                      <td>
+                        <t t-set="services" t-value="(doc['maintenance'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % services"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Comision Renta</th>
                       <td><span t-esc="'%.2f' % doc['sale_comission']"/></td>
                       <td>
                         <t t-set="pub" t-value="(doc['sale_comission'] * total_100 / doc['total_invoiced'])"/>
@@ -90,20 +90,6 @@
                       </td>
                     </tr>
                     <tr groups="account.group_account_manager">
-                      <th scope="row">Prestamos</th>
-                      <td><span t-esc="'%.2f' % doc['loans']"/></td>
-                      <td>
-                        <t t-set="loan" t-value="(doc['loans'] * total_100 / doc['total_invoiced'])"/>
-                        <span t-esc="'%.2f' % loan"></span>%
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row"># Tickets</th>
-                      <td>
-                        <span t-esc="doc['total_invoiced']"/>
-                      </td>
-                    </tr>
-                    <tr groups="account.group_account_manager">
                       <th scope="row">Utilidad neta</th>
                       <td>
                         <span t-esc="'%.2f' % doc['utility']"/>
@@ -111,24 +97,6 @@
                       <td>
                         <t t-set="util" t-value="(doc['utility'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % util"></span>%
-                      </td>
-                    </tr>
-                     <tr groups="account.group_account_manager">
-                      <th scope="row">% Utilidad</th>
-                      <td>
-                        <span t-esc="'%.2f' % doc['p_utility']"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Ticket Promedio</th>
-                      <td>
-                        <span t-esc="'%.2f' % doc['total_invoiced']"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope="row">% Ganancia Ref.</th>
-                      <td>
-                        <span t-esc="'%.2f' % doc['p_ref']"/>
                       </td>
                     </tr>
                   </tbody>
