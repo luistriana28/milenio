@@ -90,6 +90,21 @@
                       </td>
                     </tr>
                     <tr groups="account.group_account_manager">
+                      <th scope="row">Tarjeta de Crédito</th>
+                      <td><span t-esc="'%.2f' % doc['credit_card']"/></td>
+                      <td>
+                        <t t-set="credit" t-value="(doc['credit_card'] * total_100 / doc['total_invoiced'])"/>
+                        <span t-esc="'%.2f' % credit"></span>%
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
+                      <th scope="row">Total de Gastos</th>
+                      <td><span t-esc="'%.2f' % doc['total_purchased']"/></td>
+                      <td>
+                        <span t-esc="'%.2f' % doc['total_purchased']"/>
+                      </td>
+                    </tr>
+                    <tr groups="account.group_account_manager">
                       <th scope="row">Utilidad neta</th>
                       <td>
                         <span t-esc="'%.2f' % doc['utility']"/>
