@@ -16,7 +16,7 @@
     },
     'depends': [
         'base',
-        'sale_management'
+        'account'
     ],
     'data': [
         'data/data.xml',
