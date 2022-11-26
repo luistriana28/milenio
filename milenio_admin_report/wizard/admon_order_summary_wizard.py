@@ -101,7 +101,7 @@ class ReportAdmonSummaryReportView(models.AbstractModel):
                     if categ.name == 'MANTENIMIENTO':
                         maintenance += purc.amount_total
                     if categ.name == 'TARJETAS CREDITO':
-                        credit_card += purc.credit_card
+                        credit_card += purc.amount_total
             else:
                 other_expense += purc.amount_total
 
