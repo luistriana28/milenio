@@ -11,6 +11,9 @@ class AdmonSummaryReportWizard(models.TransientModel):
         default=fields.Date.context_today)
     date_end = fields.Date(string='End Date', required=True,
         default=fields.Date.context_today)
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        default=lambda self: self.env.user.company_id.currency_id)
 
     @api.onchange('date_start')
     def _onchange_date_start(self):
@@ -30,11 +33,13 @@ class AdmonSummaryReportWizard(models.TransientModel):
         data = {
             'model': self._name,
             'ids': self.ids,
+            'currency_id': self.currency_id,
             'form': {
                 'date_start': self.date_start, 
                 'date_end': self.date_end,
             },
         }
+
         return self.env.ref(
             'milenio_admin_report.admon_summary_report').report_action(
             self, data=data)
@@ -117,7 +122,8 @@ class ReportAdmonSummaryReportView(models.AbstractModel):
             'total_purchased': total_purchased,
             'utility': (total_invoiced - total_purchased),
             'other_expense': other_expense,
-            'company': self.env.user.company_id
+            'currency_id': self.env.user.company_id.currency_id,
+            'company': self.env.user.company_id,
         })
 
         docargs = {

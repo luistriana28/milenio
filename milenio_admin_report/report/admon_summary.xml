@@ -10,6 +10,7 @@
 
    <template id="admon_summary_report_view">
         <t t-call="web.html_container">
+          <t t-foreach="docs" t-as="doc">
             <div class="header" style="border-bottom: 1px solid black;">
                 <h3 class="text-center">Resumen 
                     <span style="font-size: 14px;"><strong>De</strong>: <t t-esc="date_start"/> <strong>Al</strong>: <t t-esc="date_end"/>
@@ -17,9 +18,10 @@
                 </h3>
             </div>
             <div class="article mt0 o_report_layout_standard">
-                <table class="table table-condensed table-bordered" t-foreach="docs" t-as="doc">
+                <table class="table table-condensed table-bordered">
                   <thead>
                     <tr>
+                      <th score="col">Concepto</th>
                       <th scope="col">Cantidad</th>
                       <th scope="col">Porcentaje</th>
                     </tr>
@@ -27,7 +29,7 @@
                   <tbody>
                     <tr>
                       <th scope="row">Ventas</th>
-                      <td><span t-esc="'%.2f' % doc['total_invoiced']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['total_invoiced']" t-options="{'widget': 'float', 'precision': 2}"/></td>
                       <td>
                         <t t-set="total_100" t-value="100"/>
                         <span t-esc="total_100"/>%
@@ -35,7 +37,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Impuestos</th>
-                      <td><span t-esc="'%.2f' % doc['taxes']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['taxes']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="impuestos" t-value="(doc['taxes'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % impuestos"></span>%
@@ -43,7 +45,7 @@
                     </tr>
                     <tr>
                       <th scope="row">Otros Gastos</th>
-                      <td><span t-esc="'%.2f' % doc['other_expense']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['other_expense']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="otrosgastos" t-value="(doc['other_expense'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % otrosgastos"></span>%
@@ -51,7 +53,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Nomina</th>
-                      <td><span t-esc="'%.2f' % doc['payroll']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['payroll']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="nomina" t-value="(doc['payroll'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % nomina"></span>%
@@ -59,7 +61,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Servicios</th>
-                      <td><span t-esc="'%.2f' % doc['services']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['services']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="services" t-value="(doc['services'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % services"></span>%
@@ -67,7 +69,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Mantenimiento</th>
-                      <td><span t-esc="'%.2f' % doc['maintenance']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['maintenance']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="services" t-value="(doc['maintenance'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % services"></span>%
@@ -75,7 +77,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Comision Renta</th>
-                      <td><span t-esc="'%.2f' % doc['sale_comission']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="'%.2f' % doc['sale_comission']"/></td>
                       <td>
                         <t t-set="pub" t-value="(doc['sale_comission'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % pub"></span>%
@@ -83,7 +85,7 @@
                     </tr>
                      <tr groups="account.group_account_manager">
                       <th scope="row">Comision Banco</th>
-                      <td><span t-esc="'%.2f' % doc['bank_comission']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['bank_comission']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="comission" t-value="(doc['bank_comission'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % comission"></span>%
@@ -91,7 +93,7 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Tarjeta de Crédito</th>
-                      <td><span t-esc="'%.2f' % doc['credit_card']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['credit_card']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
                         <t t-set="credit" t-value="(doc['credit_card'] * total_100 / doc['total_invoiced'])"/>
                         <span t-esc="'%.2f' % credit"></span>%
@@ -99,15 +101,15 @@
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Total de Gastos</th>
-                      <td><span t-esc="'%.2f' % doc['total_purchased']"/></td>
+                      <td><span t-field="doc['currency_id'].symbol"/><span t-esc="doc['total_purchased']" t-options="{'widget': 'float','precision': 2}"/></td>
                       <td>
-                        <span t-esc="'%.2f' % doc['total_purchased']"/>
+                        <span t-field="doc['currency_id'].symbol"/><span t-esc="doc['total_purchased']" t-options="{'widget': 'float','precision': 2}"/>
                       </td>
                     </tr>
                     <tr groups="account.group_account_manager">
                       <th scope="row">Utilidad neta</th>
                       <td>
-                        <span t-esc="'%.2f' % doc['utility']"/>
+                        <span t-field="doc['currency_id'].symbol"/><span t-esc="doc['utility']" t-options="{'widget': 'float','precision': 2}"/>
                       </td>
                       <td>
                         <t t-set="util" t-value="(doc['utility'] * total_100 / doc['total_invoiced'])"/>
@@ -117,6 +119,7 @@
                   </tbody>
                 </table>
             </div>
+          </t>
         </t>
     </template>
 </odoo>
